@@ -10,7 +10,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 31
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
     }
 
     buildTypes {
@@ -36,7 +36,7 @@ afterEvaluate {
 
                 groupId = 'com.github.galalem'
                 artifactId = 'async'
-                version = '1.0'
+                version = '1.0.1'
             }
         }
     }

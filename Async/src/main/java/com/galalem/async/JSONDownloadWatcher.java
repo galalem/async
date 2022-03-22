@@ -10,20 +10,25 @@ public interface JSONDownloadWatcher {
 
     /**
      * called when the JSON Text download is completed
-     * @param jsonTxt the JSON Text result
+     * @param json the JSON Text result
      */
-    void onLoaded(@NonNull String jsonTxt);
+    default void onLoaded(@NonNull String json) { }
     /**
      * called when the JSON download is successfully completed and the result is valid JSON object
      *
      * @param json the JSON result as an object
      */
-    void onFinish(@Nullable JSONObject json);
+    default void onFinish(@Nullable JSONObject json) { }
 
     /**
      * called when the JSON download is successfully completed and the result is valid JSON array
      *
      * @param json the JSON result as an array
      */
-    void onFinish(@Nullable JSONArray json);
+    default void onFinish(@Nullable JSONArray json) { }
+
+    /**
+     * called when the JSON download is cancelled or failed
+     */
+    default void onCancelled() { }
 }

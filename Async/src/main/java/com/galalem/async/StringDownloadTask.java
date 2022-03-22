@@ -1,5 +1,7 @@
 package com.galalem.async;
 
+import android.os.AsyncTask;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,23 +9,26 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class StringDownloadTask {
+class StringDownloadTask extends AsyncTask<String, Integer, Boolean> {
 
     private final StringDownloadWatcher listener;
 
-    public StringDownloadTask(StringDownloadWatcher listener) {
+    StringDownloadTask(StringDownloadWatcher listener) {
+        super();
         this.listener = listener;
     }
 
-    public void execute(String url) {
+    @Override
+    protected Boolean doInBackground(String... urls) {
+
         InputStream input = null;
         try {
-            input = new URL(url).openStream();
+            input = new URL(urls[0]).openStream();
         } catch (IOException e) {
             e.printStackTrace();
         }
         if (input == null)
-            return;
+            return false;
 
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
@@ -33,9 +38,18 @@ public class StringDownloadTask {
                 builder.append((char) temp);
 
             listener.onFinish(builder.toString());
+
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        return false;
+    }
+
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        if (listener != null) listener.onCancelled();
     }
 }

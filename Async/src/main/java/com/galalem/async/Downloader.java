@@ -17,20 +17,28 @@ public abstract class Downloader {
     }
 
     public static void downloadJSON(String from, JSONDownloadWatcher listener) {
-        downloadString(from, result -> {
-            JSONObject object = null;
-            JSONArray array = null;
-            if (listener != null) listener.onLoaded(result);
-            try {
-                object = new JSONObject(result);
-            } catch (JSONException ignored) {
+        downloadString(from, new StringDownloadWatcher() {
+            @Override
+            public void onFinish(String result) {
+                JSONObject object = null;
+                JSONArray array = null;
+                if (listener != null) listener.onLoaded(result);
+                try {
+                    object = new JSONObject(result);
+                } catch (JSONException ignored) {
+                }
+                if (listener != null) listener.onFinish(object);
+                try {
+                    array = new JSONArray(result);
+                } catch (JSONException ignored) {
+                }
+                if (listener != null) listener.onFinish(array);
             }
-            if (listener != null) listener.onFinish(object);
-            try {
-                array = new JSONArray(result);
-            } catch (JSONException ignored) {
+
+            @Override
+            public void onCancelled() {
+                if (listener != null) listener.onCancelled();
             }
-            if (listener != null) listener.onFinish(array);
         });
     }
 

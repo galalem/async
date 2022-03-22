@@ -2,6 +2,8 @@ package com.galalem.async;
 
 import android.os.AsyncTask;
 
+import androidx.annotation.NonNull;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,7 +11,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-class StringDownloadTask extends AsyncTask<String, Integer, Boolean> {
+class StringDownloadTask extends AsyncTask<String, Integer, String> {
 
     private final StringDownloadWatcher listener;
 
@@ -18,8 +20,9 @@ class StringDownloadTask extends AsyncTask<String, Integer, Boolean> {
         this.listener = listener;
     }
 
+    @NonNull
     @Override
-    protected Boolean doInBackground(String... urls) {
+    protected String doInBackground(String... urls) {
 
         InputStream input = null;
         try {
@@ -28,7 +31,7 @@ class StringDownloadTask extends AsyncTask<String, Integer, Boolean> {
             e.printStackTrace();
         }
         if (input == null)
-            return false;
+            return "";
 
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
@@ -36,15 +39,18 @@ class StringDownloadTask extends AsyncTask<String, Integer, Boolean> {
             int temp;
             while ((temp = reader.read()) != -1)
                 builder.append((char) temp);
-
-            listener.onFinish(builder.toString());
-
-            return true;
+            return builder.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return false;
+        return "";
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+        if (listener != null) listener.onFinish(s);
     }
 
     @Override

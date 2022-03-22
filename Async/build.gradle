@@ -10,7 +10,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 31
         versionCode 1
-        versionName "1.0.2"
+        versionName "1.0.3"
     }
 
     buildTypes {
@@ -28,6 +28,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.4.1'
 }
 
+
 afterEvaluate {
     publishing {
         publications {
@@ -36,7 +37,7 @@ afterEvaluate {
 
                 groupId = 'com.github.galalem'
                 artifactId = 'async'
-                version = '1.0.2'
+                version = '1.0.3'
             }
         }
     }
